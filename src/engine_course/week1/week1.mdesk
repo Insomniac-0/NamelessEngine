@@ -1,0 +1,73 @@
+// tables
+
+@table(name		name_lower		input_attribs					output_attribs)
+OGL_ShaderTable:
+{
+	{Triangle		triangle		g_ogl_triangle_input_attributes		g_ogl_single_color_output_attributes}
+}
+
+@enum OGL_ShaderKind:
+{
+	@expand(OGL_ShaderTable a) `$(a.name)`,
+		COUNT
+}
+
+@data(String8) g_ogl_shader_kind_table:
+{
+	@expand(OGL_ShaderTable a) `str8_lit_comp("$(a.name_lower)")`
+}
+
+@data(`String8 *`) g_ogl_shader_kind_vshad_src_table:
+{
+	@expand(OGL_ShaderTable a) `&g_ogl_$(a.name_lower)_vshad_src`,
+}
+
+@data(`String8 *`) g_ogl_shader_kind_fshad_src_table:
+{
+	@expand(OGL_ShaderTable a) `&g_ogl_$(a.name_lower)_fshad_src`,
+}
+
+@data(OGL_AttributeArray) g_ogl_shader_kind_input_attributes_table:
+{
+	@expand(OGL_ShaderTable a) `{ $(a.input_attribs), $(a.input_attribs != 0 -> "ArrayCount(" .. a.input_attribs .. ")") }`,
+}
+
+@data(OGL_AttributeArray) g_ogl_shader_kind_output_attributes_table:
+{
+	@expand(OGL_ShaderTable a) `{ $(a.output_attribs), ArrayCount($(a.output_attribs)) }`,
+}
+
+// vertex-shader
+@embed_string g_ogl_triangle_vshad_src:
+```
+#version 430 core
+
+in vec4 i2v_pos;
+in vec4 i2v_color;
+
+out vec4 v2f_color;
+
+uniform mat4 u_mat;
+
+
+void main()
+{
+	gl_Position = i2v_pos;
+	v2f_color = i2v_color;
+}
+
+```
+
+// fragment-shader
+@embed_string g_ogl_triangle_fshad_src:
+```
+#version 430 core
+
+in vec4 v2f_color;
+out vec4 final_color;
+
+void main()
+{
+	final_color = v2f_color;
+} 
+```

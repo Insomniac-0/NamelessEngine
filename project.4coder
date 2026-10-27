@@ -1,0 +1,61 @@
+version(1);
+
+project_name = "Nameless Engine";
+
+patterns = {
+	"*.c",
+	"*.cpp",
+	"*.ds",
+	"*.h",
+	"*.bat",
+	"*.sh",
+	"*.4coder",
+	"*.mdesk",
+	"*.md",
+	"*.glsl",
+};
+
+blacklist_patterns = {
+	".*",
+};
+
+paths = 
+{
+	{.path = ".", .recursive = false, .relative = true },
+	{.path = "src", .recursive = true, .relative = true },
+};
+
+load_paths = 
+{
+	.win = paths,
+	.linux = paths,
+};
+
+command_list = {
+	{
+		.name = "build",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = false,
+		.cmd = {
+			{ "build.bat", .os = "win" },
+			{ "./build.sh week1 debug", .os = "linux"}, 
+		},
+	},
+	
+	{
+		.name = "run",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = false,
+		.cmd = {
+			{ "run.bat", .os = "win" },
+			{ "./run.sh", .os = "linux" },
+		},
+	},
+};
+
+fkey_command[1] = "build";
+fkey_command[3] = "run";

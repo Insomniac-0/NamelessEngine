@@ -1,0 +1,18 @@
+# Emacs
+*~
+\#*\#
+.#*
+*.elc
+.projectile
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# folders
+build/
+dev/
+
+
