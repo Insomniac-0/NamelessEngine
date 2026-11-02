@@ -19,7 +19,7 @@ struct R_OGL_AttributeArray
 };
 
 typedef struct R_OGL_State R_OGL_State;
-struct
+struct R_OGL_State
 {
 	Arena *arena;
 	GLuint default_vao;

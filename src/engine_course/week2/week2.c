@@ -21,3 +21,10 @@ key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		}break;
 	}
 }
+
+
+// stub function for now because the ordering of glfw and glew 
+internal void
+r_init(CmdLine *cmdline)
+{
+}

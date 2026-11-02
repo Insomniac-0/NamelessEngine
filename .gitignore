@@ -11,6 +11,9 @@
 *.la
 *.lo
 
+# DBG Info
+*.rdi
+
 # folders
 build/
 dev/

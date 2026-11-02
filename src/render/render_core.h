@@ -19,10 +19,7 @@ struct R_Mesh3dInstance
 
 //- Render Hooks
 
-internal void
-r_init(CmdLine *cmdline)
-{
-}
+internal void r_init(CmdLine *cmdline);
 
 
 #endif // RENDER_CORE_H

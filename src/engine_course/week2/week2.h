@@ -4,6 +4,14 @@
 #define W_WIDTH 1280
 #define W_HEIGHT 960
 
+
+typedef struct VertexIndexArrayPair VertexIndexArrayPair;
+struct VertexIndexArrayPair
+{
+	Vec3F32Array vertices;
+	S32Array indices;
+};
+
 typedef struct OGL_State OGL_State;
 struct OGL_State
 {
@@ -26,8 +34,8 @@ struct OGL_VertexBuffer
 };
 
 
-typedef struct W2_State W2_State
-struct
+typedef struct W2_State W2_State;
+struct W2_State
 {
 	Arena *arena;
 
@@ -50,12 +58,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 
 
-typedef VertexIndexArrayPair VertexIndexPair;
-struct VertexIndexPair
-{
-	Vec3F32Array vertices;
-	S32Array indices;
-}
+
 
 
 #endif // WEEK_1_H
