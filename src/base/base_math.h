@@ -2,8 +2,18 @@
 #define BASE_MATH_H
 
 
-//~ Vector Types
 
+// Constants
+
+#define PiF32                       (3.1415926535897f)
+#define OneOverSquareRootOfTwoPiF32 (0.3989422804f)
+#define EulersNumberF32             (2.7182818284590452353602874713527f)
+
+#define PiF64                       (3.1415926535897)
+#define OneOverSquareRootOfTwoPiF64 (0.3989422804)
+#define EulersNumberF64             (2.7182818284590452353602874713527)
+
+//~ Vector Types
 
 typedef union Vec2F32 Vec2F32;
 union Vec2F32
@@ -181,22 +191,40 @@ union Vec4S32
 typedef struct Mat3x3F32 Mat3x3F32;
 struct Mat3x3F32
 {
-	F32 v[3][3];
+	F32 elements[3][3];
 };
 
 typedef struct Mat4x4F32 Mat4x4F32;
 struct Mat4x4F32
 {
-	F32 v[4][4];
+	F32 elements[4][4];
 };
 
 
 //~ Matrix Constructors
-//- 3x3
 internal Mat3x3F32 MakeMat3x3F32(F32 d);
+internal Mat3x3F32 MakeTranslate3x3F32(Vec2F32 translation);
+internal Mat3x3F32 MakeScale3x3F32(Vec2F32 scale);
+internal Mat3x3F32 MakeRotate3x3F32(F32 turns);
 
-//- 4x4
+
 internal Mat4x4F32 MakeMat4x4F32(F32 d);
+internal Mat4x4F32 MakeTranslate4x4F32(Vec3F32 translation);
+internal Mat4x4F32 MakeScale4x4F32(Vec3F32 scale);
+internal Mat4x4F32 MakePerspective4x4F32(F32 fov, F32 aspect_ratio, F32 near_z, F32 far_z);
+internal Mat4x4F32 MakeOrthographic4x4F32(F32 left, F32 right, F32 bottom, F32 top, F32 near_z, F32 far_z);
+internal Mat4x4F32 MakeLookAt4x4F32(Vec3F32 eye, Vec3F32 center, Vec3F32 up);
+internal Mat4x4F32 MakeRotate4x4F32(Vec3F32 axis, F32 turns);
+
+
+// Matrix Ops
+
+internal Mat3x3F32 Mul3x3F32(Mat3x3F32 a, Mat3x3F32 b);
+internal Mat3x3F32 Scale3x3F32(Mat3x3F32 m, F32 scale);
+internal Mat4x4F32 Mul4x4F32(Mat4x4F32 a, Mat4x4F32 b);
+internal Mat4x4F32 Scale4x4F32(Mat4x4F32 m, F32 scale);
+internal Mat4x4F32 Inverse4x4F32(Mat4x4F32 m);
+
 
 
 //~ Range Types
@@ -360,7 +388,19 @@ union Range2F32
 
 //~ Base Math Ops
 
+#define RadFromTurnsF32(v)	((v) * (2*PiF32))
+#define TurnsFromRadF32(v)	((v) / (2*PiF32))
+
 #define SqrtF32(v)		sqrtf(v)
+
+#define SinF32(v)			sinf(RadFromTurnsF32(v))
+#define CosF32(v)			cosf(RadFromTurnsF32(v))
+#define TanF32(v)			tanf(RadFromTurnsF32(v))
+#define ArcSinF32(v)	TurnsFromRadF32(asinf(v))
+#define ArcCosF32(v)	TurnsFromRadF32(acosf(v))
+#define ArcTanF32(v)	TurnsFromRadF32(atanf(v))
+#define ArcTan2F32(y, x)	TurnsFromRadF32(atan2f((y), (x)))
+
 #define CbrtF32(v)		cbrtf(v)
 #define PowF32(b, e)	powf((b), (e))
 #define CeilF32(v)		ceilf(v)
@@ -488,10 +528,10 @@ internal U64 dim_1u64(Range1U64 r);
 // Color Operations TODO(seppo) Impl:
 
 // hsv <-> rgb
-internal Vec3F32 hsv_from_rgb(Vec3F32 rgb);
-internal Vec3F32 rbg_from_hsv(Vec3F32 hsv);
-internal Vec4F32 hsva_from_rgba(Vec4F32 rgba);
-internal Vec4F32 rbga_from_hsva(Vec3F32 hsva);
+internal Vec3F32 HSVFromRGB(Vec3F32 rgb);
+internal Vec3F32 RGBFromHSV(Vec3F32 hsv);
+internal Vec4F32 HSVAFromRGBA(Vec4F32 rgba);
+internal Vec4F32 RGBAFromHSVA(Vec3F32 hsva);
 
 // srgb <-> linear
 internal Vec3F32 linear_from_srgb(Vec3F32 srgb);
@@ -507,10 +547,11 @@ internal Vec4F32 oklab_from_lineara(Vec4F32 lineara);
 internal Vec4F32 lineara_from_oklab(Vec4F32 oklab);
 
 // rgba <-> u32
-internal U32			u32_from_rgba(Vec4F32 rgba);
-internal Vec4F32	rgba_from_u32(U32 hex);
+internal U32			HexU32FromRGBA(Vec4F32 rgba);
+internal Vec4F32	RGBAFromHexU32(U32 hex);
 
-#define rgba_from_u32_lit_comp(h) { (((h)&0xff000000)>>24)/255.f, (((h)&0x00ff0000)>>16)/255.f, (((h)&0x0000ff00)>> 8)/255.f, (((h)&0x000000ff)>> 0)/255.f }
+
+#define RGBAFromU32_LitComp(h) { (((h)&0xff000000)>>24)/255.f, (((h)&0x00ff0000)>>16)/255.f, (((h)&0x0000ff00)>> 8)/255.f, (((h)&0x000000ff)>> 0)/255.f }
 
 #if !BASE_DISABLE_OMITTED_BASE_TYPES
 

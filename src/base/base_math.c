@@ -422,34 +422,228 @@ Div4F32_F32(Vec4F32 a, F32 b)
 internal Mat3x3F32
 MakeMat3x3F32(F32 d)
 {
-	Mat3x3F32 result =
-	{
-		{
-			{d, 0, 0},
-			{0, d, 0},
-			{0, 0, d},
-		},
-	};
+	Mat3x3F32 result = {0};
+	result.elements[0][0] = d;
+	result.elements[1][1] = d;
+	result.elements[2][2] = d;
+
 	return result;
 }
+
+internal Mat3x3F32
+MakeTranslate3x3F32(Vec2F32 translation)
+{
+	Mat3x3F32 result = MakeMat3x3F32(1.0f);
+	result.elements[2][0] = translation.x;
+	result.elements[2][1] = translation.y;
+	return result;
+}
+
+internal Mat3x3F32
+MakeScale3x3F32(Vec2F32 scale)
+{
+	Mat3x3F32 result = MakeMat3x3F32(1.0f);
+	result.elements[0][0] = scale.x;
+	result.elements[1][1] = scale.y;
+	return result;
+}
+
+internal Mat3x3F32
+MakeRotate3x3F32(F32 turns)
+{
+	Mat3x3F32 result = MakeMat3x3F32(1.0f);
+	result.elements[0][0] = +CosF32(turns);
+	result.elements[1][0] = -SinF32(turns);
+	result.elements[0][1] = +SinF32(turns);
+	result.elements[1][1] = +CosF32(turns);
+	return result;
+}
+
+
 
 
 //- 4x4
 internal Mat4x4F32
 MakeMat4x4F32(F32 d)
 {
-	Mat4x4F32 result =
-	{
-		{
-			{d, 0, 0, 0},
-			{0, d, 0, 0},
-			{0, 0, d, 0},
-			{0, 0, 0, 1},
-		},
-	};
+	Mat4x4F32 result = {0};
+	result.elements[0][0] = d;
+	result.elements[1][1] = d;
+	result.elements[2][2] = d;
+	result.elements[3][3] = d;
+
 	return result;
 }
 
+
+internal Mat4x4F32
+MakeTranslate4x4F32(Vec3F32 translation)
+{
+	Mat4x4F32 result = MakeMat4x4F32(1.0f);
+	result.elements[3][0] = translation.x;
+	result.elements[3][1] = translation.y;
+	result.elements[3][2] = translation.z;
+	return result;
+}
+
+internal Mat4x4F32
+MakeScale4x4F32(Vec3F32 scale)
+{
+	Mat4x4F32 result = MakeMat4x4F32(1.0f);
+	result.elements[0][0] = scale.x;
+	result.elements[1][1] = scale.y;
+	result.elements[2][2] = scale.z;
+	return result;
+}
+
+internal Mat4x4F32
+MakePerspective4x4F32(F32 fov, F32 aspect_ratio, F32 near_z, F32 far_z)
+{
+	Mat4x4F32 result = MakeMat4x4F32(1.0f);
+	F32 tan_theta_over_2 = TanF32(fov / 2);
+	result.elements[0][0] = 1.0f / tan_theta_over_2;
+	result.elements[1][1] = aspect_ratio / tan_theta_over_2;
+	result.elements[2][3] = 1.0f;
+	result.elements[2][2] = -(near_z + far_z) / (near_z - far_z);
+	result.elements[3][2] = (2.0f * near_z * far_z) / (near_z - far_z);
+	result.elements[3][3] = 0.0f;
+	return result;
+}
+
+internal Mat4x4F32
+MakeOrthographic4x4F32(F32 left, F32 right, F32 bottom, F32 top, F32 near_z, F32 far_z)
+{
+	Mat4x4F32 result = MakeMat4x4F32(1.0f);
+
+	result.elements[0][0] = 2.0f / (right - left);
+	result.elements[1][1] = 2.0f / (top - bottom);
+	result.elements[2][2] = 2.0f / (far_z - near_z);
+	result.elements[3][3] = 1.0f;
+
+	result.elements[3][0] = (left + right) / (left - right);
+	result.elements[3][0] = (bottom + top) / (bottom - top);
+	result.elements[3][0] = (near_z + far_z) / (near_z - far_z);
+	return result;
+}
+
+internal Mat4x4F32
+MakeLookAt4x4F32(Vec3F32 eye, Vec3F32 center, Vec3F32 up)
+{
+	Mat4x4F32 result;
+	Vec3F32 f = Normalized3F32(Sub3F32(eye, center));
+	Vec3F32 s = Normalized3F32(Cross3F32(f, up));
+	Vec3F32 u = Cross3F32(s, f);
+
+	result.elements[0][0] = s.x;
+	result.elements[0][1] = u.x;
+	result.elements[0][2] = -f.x;
+	result.elements[0][3] = 0.0f;
+
+	result.elements[1][0] = s.y;
+	result.elements[1][1] = u.y;
+	result.elements[1][2] = -f.y;
+	result.elements[1][3] = 0.0f;
+
+	result.elements[2][0] = s.z;
+	result.elements[2][1] = u.z;
+	result.elements[2][2] = -f.z;
+	result.elements[2][3] = 0.0f;
+
+	result.elements[3][0] = -Dot3F32(s, eye);
+	result.elements[3][1] = -Dot3F32(u, eye);
+	result.elements[3][2] = -Dot3F32(f, eye);
+	result.elements[3][3] = 1.0f;
+
+	return result;
+}
+
+internal Mat4x4F32
+MakeRotate4x4F32(Vec3F32 axis, F32 turns)
+{
+	Mat4x4F32 result = MakeMat4x4F32(1.0f);
+	axis = Normalized3F32(axis);
+	F32 sin_theta = SinF32(turns);
+	F32 cos_theta = CosF32(turns);
+	F32 cos_value = 1.0f - cos_theta;
+
+	result.elements[0][0] = (axis.x * axis.x * cos_value) + cos_theta;
+	result.elements[0][1] = (axis.x * axis.y * cos_value) + (axis.z * sin_theta);
+	result.elements[0][2] = (axis.x * axis.z * cos_value) - (axis.y * sin_theta);
+
+	result.elements[1][0] = (axis.y * axis.x * cos_value) - (axis.z * sin_theta);
+	result.elements[1][1] = (axis.y * axis.y * cos_value) + cos_theta;
+	result.elements[1][2] = (axis.y * axis.z * cos_value) + (axis.x * sin_theta);
+
+	result.elements[2][0] = (axis.z * axis.x * cos_value) + (axis.y * sin_theta);
+	result.elements[2][1] = (axis.z * axis.y * cos_value) - (axis.x * sin_theta);
+	result.elements[2][2] = (axis.z * axis.z * cos_value) + cos_theta;
+
+	return result;
+}
+
+// Matrix Ops
+
+internal Mat3x3F32
+Mul3x3F32(Mat3x3F32 a, Mat3x3F32 b)
+{
+	Mat3x3F32 c = {0};
+	for(int j = 0; j < 3; j += 1)
+	{
+		for(int i = 0; i < 3; i += 1)
+		{
+			c.elements[i][j] = (a.elements[0][j] * b.elements[i][0] +
+													a.elements[1][j] * b.elements[i][1] +
+													a.elements[2][j] * b.elements[i][2]);
+		}
+	}
+
+	return c;
+}
+
+internal Mat3x3F32
+Scale3x3F32(Mat3x3F32 m, F32 scale)
+{
+	for(int j = 0; j < 3; j += 1)
+	{
+		for(int i = 0; i < 3; i += 1)
+		{
+			m.elements[i][j] *= scale;
+		}
+	}
+	return m;
+}
+
+internal Mat4x4F32
+Mul4x4F32(Mat4x4F32 a, Mat4x4F32 b)
+{
+	Mat4x4F32 c = {0};
+	for(int j = 0; j < 4; j += 1)
+	{
+		for(int i = 0; i < 4; i += 1)
+		{
+			c.elements[i][j] = (a.elements[0][j] * b.elements[i][0] +
+													a.elements[1][j] * b.elements[i][1] +
+													a.elements[2][j] * b.elements[i][2] +
+													a.elements[3][j] * b.elements[i][3]);
+		}
+	}
+	return c;
+}
+
+internal Mat4x4F32
+Scale4x4F32(Mat4x4F32 m, F32 scale)
+{
+	for(int j = 0; j < 4; j += 1)
+	{
+		for(int i = 0; i < 4; i += 1)
+		{
+			m.elements[i][j] *= scale;
+		}
+	}
+	return m;
+}
+
+internal Mat4x4F32 Inverse4x4F32(Mat4x4F32 m);
 
 
 internal B8

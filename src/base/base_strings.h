@@ -294,10 +294,8 @@ internal UnicodeDecode utf16_decode(U16 *str, U64 max);
 internal U32 utf8_encode(U8 *str, U32 codepoint);
 internal U32 utf16_encode(U16 *str, U32 codepoint);
 
-
-
 internal PathStyle		path_style_from_str8(String8 string);
-internal String8List	str8_split_path(Arena *arena, String8 string);
+
 internal void 				str8_path_list_resolve_dots_in_place(String8List *path, PathStyle style);
 internal void					str8_path_list_join_by_style(Arena *arena, String8List *path, PathStyle style);
 
@@ -310,7 +308,6 @@ internal String8 path_relative_dst_from_absolute_dst_src(Arena *arena, String8 d
 internal String8 path_absolute_dst_from_absolute_dst_src(Arena *arena, String8 dst, String8 src);
 
 // Path Normalization TODO(seppo):
-
 internal String8List	path_normalized_list_from_string(Arena *arena, String8 path, PathStyle *style_out);
 internal String8 			path_normalized_from_string(Arena *arena, String8 path);
 internal B32					path_match_normalized(String8 left, String8 right);

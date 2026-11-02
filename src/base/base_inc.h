@@ -9,6 +9,7 @@
 #include "base_memory.h"
 #include "base_arena.h"
 #include "base_math.h"
+#include "base_type_structures.h"
 #include "base_strings.h"
 #include "base_hash.h"
 #include "base_system.h"

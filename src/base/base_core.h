@@ -449,6 +449,27 @@ struct U128Array
 };
 
 
+typedef struct S16Array S16Array;
+struct S16Array
+{
+	S16* v;
+	U64 count;
+};
+
+typedef struct S32Array S32Array;
+struct S32Array
+{
+	S32* v;
+	U64 count;
+};
+
+
+typedef struct S64Array S64Array;
+struct S64Array
+{
+	U64* v;
+	U64 count;
+};
 
 
 

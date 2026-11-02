@@ -457,7 +457,6 @@ str8_copy(Arena *arena, String8 s)
 	return str;
 }
 
-
 internal String8
 str8fv(Arena *arena, char *fmt, va_list args)
 {
