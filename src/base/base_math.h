@@ -390,16 +390,17 @@ union Range2F32
 
 #define RadFromTurnsF32(v)	((v) * (2*PiF32))
 #define TurnsFromRadF32(v)	((v) / (2*PiF32))
+#define TurnsFromDegF32(v)  ((v) / (360.0f))
 
 #define SqrtF32(v)		sqrtf(v)
 
-#define SinF32(v)			sinf(RadFromTurnsF32(v))
-#define CosF32(v)			cosf(RadFromTurnsF32(v))
-#define TanF32(v)			tanf(RadFromTurnsF32(v))
-#define ArcSinF32(v)	TurnsFromRadF32(asinf(v))
-#define ArcCosF32(v)	TurnsFromRadF32(acosf(v))
-#define ArcTanF32(v)	TurnsFromRadF32(atanf(v))
-#define ArcTan2F32(y, x)	TurnsFromRadF32(atan2f((y), (x)))
+#define SinF32(v)			sinf(v)
+#define CosF32(v)			cosf(v)
+#define TanF32(v)			tanf(v)
+#define ArcSinF32(v)	asinf(v)
+#define ArcCosF32(v)	acosf(v)
+#define ArcTanF32(v)	atanf(v)
+#define ArcTan2F32(y, x) atan2f((y), (x))
 
 #define CbrtF32(v)		cbrtf(v)
 #define PowF32(b, e)	powf((b), (e))
@@ -412,6 +413,7 @@ union Range2F32
 #define CeilF64(v)		ceil(v)
 #define FloorF64(v)		floor(v)
 #define RoundF64(v)		round(v)
+#define ModF32(x, y)	fmodf(x, y)
 
 #define ABS(a) ((a) > 0 ? (a) : -(a))
 #define MOD(a, m) (((a) % (m)) >= 0 ? ((a) % (m)) : (((a) % (m)) + (m)))

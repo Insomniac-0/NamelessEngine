@@ -36,6 +36,7 @@ internal void r_ogl_init(CmdLine *cmdline);
 #define shader_source_from_file_path(arena, path)		data_from_file_path((arena), (path))
 
 #define glUseProgramScope(...)              DeferLoop(glUseProgram(__VA_ARGS__), glUseProgram(0))
+#define glBindBufferScope(target, ...)			DeferLoop(glBindBuffer((target), __VA_ARGS__), glBindBuffer((target), 0))
 #define glBindVertexArrayScope(...)         DeferLoop(glBindVertexArray(__VA_ARGS__), glBindVertexArray(0))
 #define glBindFramebufferScope(target, ...) DeferLoop(glBindFramebuffer((target), __VA_ARGS__), glBindFramebuffer((target), 0))
 #define glBindTextureScope(target, ...)     DeferLoop(glBindTexture((target), __VA_ARGS__), glBindTexture((target), 0))

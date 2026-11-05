@@ -1,3 +1,3 @@
 #bin/bash
 
-./build/week1
+./build/week2

@@ -452,10 +452,10 @@ internal Mat3x3F32
 MakeRotate3x3F32(F32 turns)
 {
 	Mat3x3F32 result = MakeMat3x3F32(1.0f);
-	result.elements[0][0] = +CosF32(turns);
-	result.elements[1][0] = -SinF32(turns);
-	result.elements[0][1] = +SinF32(turns);
-	result.elements[1][1] = +CosF32(turns);
+	result.elements[0][0] = +CosF32(RadFromTurnsF32(turns));
+	result.elements[1][0] = -SinF32(RadFromTurnsF32(turns));
+	result.elements[0][1] = +SinF32(RadFromTurnsF32(turns));
+	result.elements[1][1] = +CosF32(RadFromTurnsF32(turns));
 	return result;
 }
 
@@ -530,6 +530,7 @@ internal Mat4x4F32
 MakeLookAt4x4F32(Vec3F32 eye, Vec3F32 center, Vec3F32 up)
 {
 	Mat4x4F32 result;
+
 	Vec3F32 f = Normalized3F32(Sub3F32(eye, center));
 	Vec3F32 s = Normalized3F32(Cross3F32(f, up));
 	Vec3F32 u = Cross3F32(s, f);
@@ -551,7 +552,7 @@ MakeLookAt4x4F32(Vec3F32 eye, Vec3F32 center, Vec3F32 up)
 
 	result.elements[3][0] = -Dot3F32(s, eye);
 	result.elements[3][1] = -Dot3F32(u, eye);
-	result.elements[3][2] = -Dot3F32(f, eye);
+	result.elements[3][2] = Dot3F32(f, eye);
 	result.elements[3][3] = 1.0f;
 
 	return result;
@@ -562,8 +563,8 @@ MakeRotate4x4F32(Vec3F32 axis, F32 turns)
 {
 	Mat4x4F32 result = MakeMat4x4F32(1.0f);
 	axis = Normalized3F32(axis);
-	F32 sin_theta = SinF32(turns);
-	F32 cos_theta = CosF32(turns);
+	F32 sin_theta = SinF32(RadFromTurnsF32(turns));
+	F32 cos_theta = CosF32(RadFromTurnsF32(turns));
 	F32 cos_value = 1.0f - cos_theta;
 
 	result.elements[0][0] = (axis.x * axis.x * cos_value) + cos_theta;
