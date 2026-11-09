@@ -319,11 +319,11 @@ entry_point(CmdLine *cmdline)
 		// Draw
 		switch(demo_index)
 		{
-			case 0: { ogl_draw_pyramid(position, rotation_axis, scale, yaw); 		} break;
-			case 1: { ogl_draw_cube(position, rotation_axis, scale, yaw); 	 		} break;
-			case 2: { ogl_draw_icosphere(position, rotation_axis, scale, yaw); 	} break;
-			case 3: { ogl_draw_uvsphere(position, rotation_axis, scale, yaw); 	} break;
-			case 4:
+      case 0: { ogl_draw_pyramid(position, rotation_axis, scale, yaw);     } break;
+      case 1: { ogl_draw_cube(position, rotation_axis, scale, yaw);        } break;
+      case 2: { ogl_draw_icosphere(position, rotation_axis, scale, yaw);   } break;
+      case 3: { ogl_draw_uvsphere(position, rotation_axis, scale, yaw);    } break;
+      case 4:
 			{
 				ogl_draw_cube(cubes[0].position, rotation_axis, cubes[0].scale, cubes[0].rotation);
 				ogl_draw_cube(cubes[1].position, rotation_axis, cubes[1].scale, cubes[1].rotation);

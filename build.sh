@@ -85,7 +85,7 @@ if [[ "${metagen:-0}" == "1" ]]; then didbuild=1 && $compiler $cc_debug ../src/m
 # Engine Assignments
 if [[ "${week1:-0}"				== "1" ]]; then didbuild=1 && $compile ../src/engine_course/week1/week1_main.c $cc_link $cc_glfw $cc_glew $cc_render -o week1; fi
 if [[ "${week2:-0}"				== "1" ]]; then didbuild=1 && $compile ../src/engine_course/week2/week2_main.c $cc_link $cc_glfw $cc_glew $cc_render -o week2; fi
-# if [[ "${week3:-0}"				== "1" ]]; then didbuild=1 && $compile ../src/engine_course/week3/week3_main.c $cc_link $cc_glfw $cc_glew $cc_render -o week3; fi
+if [[ "${week3:-0}"				== "1" ]]; then didbuild=1 && $compile ../src/engine_course/week3/week3_main.c $cc_link $cc_sdl $cc_glew $cc_render -o week3; fi
 # if [[ "${week4:-0}"				== "1" ]]; then didbuild=1 && $compile ../src/engine_course/week4/week4_main.c $cc_link $cc_glfw $cc_glew $cc_render -o week4; fi
 
 # Targets
