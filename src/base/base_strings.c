@@ -195,17 +195,40 @@ str8_match(String8 a, String8 b, StringMatchFlags flags)
 
 	if (a.size == b.size && flags == 0)
 	{
-		result = MemoryMatch(a.str, b.str, b.size);
+		//result = MemoryMatch(a.str, b.str, b.size);
+		result = MemIsEqual(a.str, b.str, b.size);
 	}
 	else if (a.size == b.size && flags == StringMatchFlag_CaseInsensitive)
 	{
-		// TODO(Insomniac): Implement when needed
+		result = MemCompareI(a.str, b.str, a.size) == 0;
 	}
 	else if (a.size == b.size || (flags & StringMatchFlag_RightSideSloppy))
 	{
-		// TODO(Insomniac): Implement when needed
+		B32 case_insensitive  = (flags & StringMatchFlag_CaseInsensitive);
+		B32 slash_insensitive = (flags & StringMatchFlag_SlashInsensitive);
+		U64 size 							= Min(a.size, b.size);
+		result = 1;
+		for (U64 i = 0; i < size; i += 1)
+		{
+			U8 at = a.str[i];
+			U8 bt = b.str[i];
+			if (case_insensitive)
+			{
+				at = upper_from_char(at);
+				bt = upper_from_char(bt);
+			}
+			if (slash_insensitive)
+			{
+				at = correct_slash_from_char(at);
+				bt = correct_slash_from_char(bt);
+			}
+			if (at != bt)
+			{
+				result = 0;
+				break;
+			}
+		}
 	}
-
 	return result;
 }
 
@@ -871,6 +894,49 @@ str8_from_s64(Arena *arena, S64 s64, U32 radix, U8 min_digits, U8 digit_group_se
 	{
 		result = str8_from_u64(arena, (U64)s64, radix, min_digits, digit_group_separator);
 	}
+	return result;
+}
+
+
+
+// String <=> Float Conversions TODO
+internal F64
+f64_from_str8(String8 string)
+{
+	F64 result = 0;
+	if(string.size > 0)
+	{
+		F64 sign = +1.0;
+		if(string.str[0] == '-')
+		{
+			sign = -1.0;
+		}
+		else if (string.str[0] == '+')
+		{
+			sign = 1.0;
+		}
+
+		U64 num_valid_chars = 0;
+		char buffer[64];
+		B32 exp = 0;
+
+		for (U64 idx = 0; idx < string.size && num_valid_chars < sizeof(buffer)-1; idx += 1)
+		{
+			if(char_is_digit(string.str[idx], 10) || string.str[idx] == '.' || string.str[idx] == 'e' ||
+				 (exp && (string.str[idx] == '+' || string.str[idx] == '-')))
+			{
+				buffer[num_valid_chars] = string.str[idx];
+				num_valid_chars += 1;
+				exp = 0;
+				exp = (string.str[idx] == 'e');
+			}
+		}
+
+		buffer[num_valid_chars] = 0;
+
+		result = sign * atof(buffer);
+	}
+
 	return result;
 }
 

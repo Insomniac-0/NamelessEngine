@@ -3,6 +3,7 @@
 #include "base_memory.c"
 #include "base_arena.c"
 #include "base_math.c"
+#include "base_type_structures.c"
 #include "base_strings.c"
 #include "base_hash.c"
 #include "base_system.c"

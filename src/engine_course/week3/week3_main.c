@@ -7,20 +7,19 @@
 
 // Layer Includes [H]
 #include "base/base_inc.h"
-#include "obj_loader/obj_loader.h"
 #include "geo3d/geo3d_inc.h"
 #include "render/render_inc.h"
+#include "obj_loader/obj_loader.h"
 #include "week3.h"
 
 // Layer Includes [C]
 #include "base/base_inc.c"
-#include "obj_loader/obj_loader.c"
 #include "geo3d/geo3d_inc.c"
 #include "render/render_inc.c"
+#include "obj_loader/obj_loader.c"
 #include "week3.c"
 
 // Generated
-
 
 
 internal void
@@ -61,7 +60,6 @@ entry_point(CmdLine *cmdline)
 
 
 
-
 	String8 meshdata_path = str8f(scratch.arena, "%S/data/meshdata", get_process_info()->binary_path);
 	String8 obj_src_path = str8f(scratch.arena, "%S/triangulated_cube.obj", meshdata_path);
 
@@ -70,10 +68,10 @@ entry_point(CmdLine *cmdline)
 
 	OBJ_TokenizeResult tokenize = obj_tokenize_from_string(scratch.arena, obj_data);
 
-	U64 pos_count = 0;
-	U64 normal_count = 0;
+	U64 pos_count      = 0;
+	U64 normal_count   = 0;
 	U64 texcoord_count = 0;
-	U64 face_count = 0;
+	U64 face_count     = 0;
 
 	for EachIndex(idx, tokenize.tokens.count)
 	{
@@ -83,79 +81,94 @@ entry_point(CmdLine *cmdline)
 		String8 raw_str = {0};
 		String8 fmt_str = {0};
 
-		raw_str = str8_substr(obj_data, tokenize.tokens.v[idx].range);
-
+	raw_str = str8_substr(obj_data, tokenize.tokens.v[idx].range);
 		if (flags & OBJ_TokenFlag_Identifier)
-		{
-			if (str8_match(raw_str, str8_lit("v"), 0))
-			{
-				fmt_str = str8_lit("Vertex Position: ");
-				pos_count += 1;
-			}
-			else if (str8_match(raw_str, str8_lit("vn"), 0))
-			{
-				fmt_str = str8_lit("Vertex Normal: ");
-				normal_count += 1;
-			}
-			else if (str8_match(raw_str, str8_lit("vt"), 0))
-			{
-				fmt_str = str8_lit("TexCoord: ");
-				texcoord_count += 1;
-			}
-			else if (str8_match(raw_str, str8_lit("f"), 0))
-			{
-				fmt_str = str8_lit("Face Indices: ");
-				face_count += 1;
-			}
-			else
-			{
-				fmt_str = str8_lit("");
-			}
-		}
-		else if (flags & OBJ_TokenFlag_Numeric)
-		{
-			fmt_str = str8f(scratch.arena, "%S ", raw_str);
-		}
-		else if (flags & OBJ_TokenFlag_Newline)
-		{
-			fmt_str = str8_lit("\n");
-		}
-		else if (flags & OBJ_TokenFlag_Newline)
-		{
-			fmt_str = str8_lit("\n");
-		}
-		else
-		{
-			fmt_str = str8_lit("");
-		}
-
-		fprintf(stderr, "%s", fmt_str.str);
-	}
-	fprintf(stderr,
-					"\nPosition Count: %lu\nNormal Count: %lu\nTexCoord Count: %lu\nFace Count:%lu\n",
-					pos_count,
-					normal_count,
-					texcoord_count,
-					face_count);
-					
-					
-
-
-	U64 last_time = now_time_us();
-	U64 now_time = now_time_us();
-	for (;!quit;)
 	{
-		now_time = now_time_us();
-		F64 dt = (F64)(now_time - last_time) / Million(1);
-		last_time = now_time;
+    if (str8_match(raw_str, str8_lit("v"), 0))
+    {
+    	fmt_str = str8_lit("Vertex Position: ");
+    	pos_count += 1;
+    }
+    else if (str8_match(raw_str, str8_lit("vn"), 0))
+    {
+    	fmt_str = str8_lit("Vertex Normal: ");
+    	normal_count += 1;
+    }
+    else if (str8_match(raw_str, str8_lit("vt"), 0))
+    {
+      fmt_str = str8_lit("TexCoord: ");
+      texcoord_count += 1;
+    }
+    else if (str8_match(raw_str, str8_lit("f"), 0))
+    {
+      fmt_str = str8_lit("Face Indices: ");
+      face_count += 1;
+    }
+    else
+    {
+      fmt_str = str8_lit("");
+    }
+  }
+  else if (flags & OBJ_TokenFlag_Numeric)
+  {
+    fmt_str = str8f(scratch.arena, "%S", raw_str);
+  }
+  else if (flags & OBJ_TokenFlag_Newline)
+  {
+    fmt_str = str8_lit("\n");
+  }
+  else if (flags & OBJ_TokenFlag_Separator)
+  {
+    fmt_str = str8_lit("|");
+  }
+  else
+  {
+    fmt_str = str8_lit("");
+  }
+
+  fprintf(stderr, "%s", fmt_str.str);
+  }
+  fprintf(stderr,
+          "\nPosition Count: %lu\nNormal Count: %lu\nTexCoord Count: %lu\nFace Count:%lu\n",
+          pos_count,
+          normal_count,
+          texcoord_count,
+          face_count);
 
 
-		glClearColor(0.05f, 0.05f, 0.05f, 0.5f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // Now we have list of tokens with identifiers numerics whitespace etc
+  // We want OBJ -> Mesh3D
 
-		SDL_GL_SwapWindow(window);
-		HandleInput();
-	}
+  //
+  // Attrib Table:
+  // index | size | type | stride | offset
+  //  glVertexAttribPointer(index, size, type, normalized, stride, offset)
+  //
+  // index = index
+  // size = 3
+  // type = GL_FLOAT
+  // normalized = GL_FALSE
+  // stride = sizeof(Vertex256)
+  // offset = OffsetOf(VertexF256, )
 
-	scratch_end(scratch);
+  
+  
+  
+  U64 last_time = now_time_us();
+  U64 now_time = now_time_us();
+  for (;!quit;)
+  {
+    now_time = now_time_us();
+    F64 dt = (F64)(now_time - last_time) / Million(1);
+    last_time = now_time;
+
+
+    glClearColor(0.05f, 0.05f, 0.05f, 0.5f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    SDL_GL_SwapWindow(window);
+    HandleInput();
+  }
+
+  scratch_end(scratch);
 }

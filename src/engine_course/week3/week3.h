@@ -10,6 +10,7 @@
 #define FAR_Z 100.0f
 
 
+
 typedef struct AppState AppState;
 struct AppState
 {
@@ -55,8 +56,19 @@ internal void HandleInput();
 internal void KeyEvent(SDL_Keycode key, SDL_Keymod mod, bool down);
 internal void WindowResizeEvent(S32 w, S32 h);
 
-/* void framebuffer_size_callback(GLFWwindow* window, int width, int height); */
-/* void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods); */
+// TODO(seppo): OBJ_ParseResult -> Mesh3D
+
+
+typedef struct Mesh3D Mesh3D;
+struct Mesh3D
+{
+	F32 *vertices;
+	U64 vertex_count;
+
+	U32 *indices;
+	U64 index_count;
+};
+
 
 
 #endif // WEEK_3_H

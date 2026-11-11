@@ -599,16 +599,13 @@ ogl_make_pyramid(Arena* arena)
 	 	{ +1.0f, -1.0f, -1.0f },
 		{ +0.0f, +1.0f, +0.0f },
 		{ +1.0f, -1.0f, +1.0f },
-		{ -1.0f, -1.0f, +1.0f },
 	};	
 		// Indices
 	local_persist read_only S32 pyramid_indices[] =
 	{
 		 2, 0, 1,
 		 2, 1, 3,
-		 2, 3, 4,
-		 2, 4, 0,
-		 4, 3, 0,
+		 2, 3, 0,
 		 0, 3, 1,
 	};
 
